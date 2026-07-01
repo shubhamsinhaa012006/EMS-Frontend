@@ -102,11 +102,34 @@ console.log(data);
 
   // DELETE EMPLOYEE
   const deleteEmployee = async (id) => {
+
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this employee?"
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+
     await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
     });
+
+    alert("✅ Employee Deleted Successfully");
+
     getEmployees();
-  };
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("❌ Failed to Delete Employee");
+
+  }
+
+};
 
   // DERIVED DATA
   const uniqueDepartments = [...new Set((Array.isArray(employees) ? employees : []).map(e => e?.department))].filter(Boolean);
@@ -230,10 +253,19 @@ console.log(data);
                   <span className="badge">{employee.department}</span>
                 </div>
                 <div className="card-body">
-                  <p><strong>Email:</strong> {employee.email}</p>
-                  <p>Salary</p>
-                <div className="salary">₹{employee.salary}</div>
+
+                    <p><strong>ID:</strong> {employee._id}</p>
+
+                    <p><strong>Email:</strong> {employee.email}</p>
+
+                    <p><strong>Salary:</strong></p>
+
+                    <div className="salary">
+                      ₹{Number(employee.salary).toLocaleString("en-IN")}
+                    </div>
+
                 </div>
+
                 <div className="card-actions">
                   <button
                     className="edit-btn"
