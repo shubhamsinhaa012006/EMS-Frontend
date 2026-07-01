@@ -53,18 +53,33 @@ function App() {
 
   // ADD OR UPDATE EMPLOYEE
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
+
+  e.preventDefault();
+
+  try {
 
     if (editId) {
-      // UPDATE
-      await fetch(`${API_URL}/${editId}`, {
+
+      const response = await fetch(`${API_URL}/${editId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert("⚠️ " + data.message);
+        return;
+      }
+
+      alert("✅ Employee Updated Successfully");
       setEditId(null);
+
     } else {
-      // ADD
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -73,18 +88,34 @@ function App() {
         body: JSON.stringify(formData),
       });
 
-const data = await response.json();
-console.log(data);
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert("⚠️ " + data.message);
+        return;
+      }
+
+      alert("✅ Employee Added Successfully");
+
     }
 
-  setFormData({
-  name: "",
-  email: "",
-  department: "",
-  salary: "",
-});
+    setFormData({
+      name: "",
+      email: "",
+      department: "",
+      salary: "",
+    });
+
     getEmployees();
-  };
+
+  } catch (error) {
+
+    console.error(error);
+    alert("❌ Something went wrong.");
+
+  }
+
+};
 
   // EDIT EMPLOYEE (Populate Form)
   const handleEditClick = (employee) => {
