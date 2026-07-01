@@ -5,10 +5,11 @@ function App() {
   const [employees, setEmployees] = useState([]);
 
   const [formData, setFormData] = useState({
-    name: "",
-    department: "",
-    salary: "",
-  });
+  name: "",
+  email: "",
+  department: "",
+  salary: "",
+});
 
   // New States
   const [editId, setEditId] = useState(null);
@@ -16,8 +17,8 @@ function App() {
   const [filterDepartment, setFilterDepartment] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const API_URL = "https://ems-backend-oh23.onrender.com/employees";
-
+  const API_URL = "http://localhost:5100/employees";
+ 
   // FETCH EMPLOYEES
   const getEmployees = async () => {
     try {
@@ -64,26 +65,40 @@ function App() {
       setEditId(null);
     } else {
       // ADD
-      await fetch(API_URL, {
+      const response = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
+
+const data = await response.json();
+console.log(data);
     }
 
-    setFormData({ name: "", department: "", salary: "" });
+  setFormData({
+  name: "",
+  email: "",
+  department: "",
+  salary: "",
+});
     getEmployees();
   };
 
   // EDIT EMPLOYEE (Populate Form)
   const handleEditClick = (employee) => {
-    setEditId(employee.id);
+
+    setEditId(employee._id);
+
     setFormData({
-      name: employee.name,
-      department: employee.department,
-      salary: employee.salary,
+        name: employee.name,
+        email: employee.email,
+        department: employee.department,
+        salary: employee.salary,
     });
-  };
+
+};
 
   // DELETE EMPLOYEE
   const deleteEmployee = async (id) => {
@@ -157,6 +172,14 @@ function App() {
               required
             />
             <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <input
               type="text"
               name="department"
               placeholder="Department"
@@ -182,7 +205,12 @@ function App() {
                   className="secondary-btn" 
                   onClick={() => {
                     setEditId(null);
-                    setFormData({ name: "", department: "", salary: "" });
+                    setFormData({
+                      name: "",
+                      email: "",
+                      department: "",
+                      salary: "",
+                      });
                   }}
                 >
                   Cancel
@@ -196,14 +224,15 @@ function App() {
         <div className="employee-grid">
           {filteredEmployees.length > 0 ? (
             filteredEmployees.map((employee) => (
-              <div key={employee.id} className="card">
+              <div key={employee._id} className="card">
                 <div className="card-header">
                   <h3>{employee.name}</h3>
                   <span className="badge">{employee.department}</span>
                 </div>
                 <div className="card-body">
+                  <p><strong>Email:</strong> {employee.email}</p>
                   <p>Salary</p>
-                  <div className="salary">₹{employee.salary}</div>
+                <div className="salary">₹{employee.salary}</div>
                 </div>
                 <div className="card-actions">
                   <button
@@ -214,7 +243,7 @@ function App() {
                   </button>
                   <button
                     className="delete-btn"
-                    onClick={() => deleteEmployee(employee.id)}
+                    onClick={() => deleteEmployee(employee._id)}
                   >
                     Delete
                   </button>
