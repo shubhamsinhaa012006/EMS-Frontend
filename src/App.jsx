@@ -17,7 +17,7 @@ function App() {
   const [filterDepartment, setFilterDepartment] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const API_URL = "http://localhost:5100/employees";
+  const API_URL = "https://ems-backend-uah1.onrender.com/employees";
  
   // FETCH EMPLOYEES
   const getEmployees = async () => {
