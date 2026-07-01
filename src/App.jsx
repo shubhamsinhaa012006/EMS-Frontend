@@ -254,7 +254,7 @@ console.log(data);
                 </div>
                 <div className="card-body">
 
-                    <p><strong>ID:</strong> {employee._id}</p>
+                    <p><strong>Employee ID:</strong> {employee.employeeId}</p>
 
                     <p><strong>Email:</strong> {employee.email}</p>
 
